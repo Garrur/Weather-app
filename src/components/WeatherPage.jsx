@@ -8,7 +8,7 @@ import sunnyBackground from "../assets/sunny.jpg";
 import rainyBackground from "../assets/rain.jpg";
 import cloudyBackground from "../assets/cloud.jpg";
 import drizzleBackground from "../assets/drizzle.jpg";
-import clear from "../assets/clear.jpg"
+import clear from "../assets/clear.jpg";
 
 const api_key = import.meta.env.VITE_WETAPI_Key;
 
@@ -20,7 +20,6 @@ export const WeatherPage = () => {
 
   useEffect(() => {
     const fetchWeatherData = async () => {
-      console.log("Fetching weather data for:", cityName);
       try {
         const response = await axios.get(
           `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${api_key}`
@@ -36,57 +35,40 @@ export const WeatherPage = () => {
   }, [cityName]);
 
   const selectBackground = () => {
-    console.log("Weather Data:", weatherdata);
-  
     if (weatherdata && weatherdata.weather && weatherdata.weather.length > 0) {
-      console.log("Weather Condition:", weatherdata.weather[0].main);
-  
       switch (weatherdata.weather[0].main) {
         case 'Clear':
-          console.log("Selected Background: Sunny");
           return sunnyBackground;
         case 'Rain':
-          console.log("Selected Background: Rainy");
           return rainyBackground;
         case 'Clouds':
-          console.log("Selected Background: Cloudy");
           return cloudyBackground;
         case 'Drizzle':
-          console.log("Selected Background: Drizzle");
           return drizzleBackground;
         default:
-          console.log("Selected Background: Default (Clear)");
           return clear; // Default background
       }
     } else {
-      console.log("No weather data available.");
       return clear; // Default background if weather data is not available
     }
   };
 
   return (
     <div>
-      
-
-      {/* Weather information */}
       <div className="min-h-screen flex items-center justify-center " style={{ backgroundImage: `url(${selectBackground()})` }}>
-        {/* Embedding the map */}
-        {loading && <WeatherSkeleton />} {/* Display loading indicator */}
+        {loading && <WeatherSkeleton />}
         {weatherdata && !error && !loading && (
           <div className="flex flex-col bg-white rounded p-4 w-full max-w-xs shadow-2xl border-2 hover:bg-sky-100">
             <div className="font-bold text-xl">{cityName}</div>
             <div className="text-sm text-gray-500">{new Date().toDateString()}</div>
-            {/* Weather Icon */}
             <div className="mt-6 text-6xl self-center inline-flex items-center justify-center rounded-lg text-indigo-400 h-24 w-24">
-              {/* Insert weather icon SVG here */}
               <div className="mt-6 text-6xl  w-full self-center inline-flex items-center justify-center rounded-lg text-indigo-400 h-24 w-24">
-                {weatherdata.weather[0].main === 'Clear' && <WiDaySunny />}  {/* Weather icon based on condition */}
+                {weatherdata.weather[0].main === 'Clear' && <WiDaySunny />}  
                 {weatherdata.weather[0].main === 'Rain' && <WiRain />}
                 {weatherdata.weather[0].main === 'Clouds' && <WiCloudy />}
                 {weatherdata.weather[0].main === 'Drizzle' && <WiShowers />}
               </div>
             </div>
-            {/* Weather Details */}
             <div className="flex flex-row items-center justify-center mt-6">
               {weatherdata && !error && (
                 <>
@@ -105,7 +87,6 @@ export const WeatherPage = () => {
                 </>
               )}
             </div>
-            {/* Additional Weather Information */}
             <div className="flex flex-row justify-between mt-6">
               {weatherdata && !error && (
                 <>
@@ -126,7 +107,7 @@ export const WeatherPage = () => {
             </div>
           </div>
         )}
-        {error && !loading && <div>{error}</div>} {/* Display error message */}
+        {error && !loading && <div>{error}</div>}
       </div>
     </div>
   );
