@@ -10,7 +10,7 @@ import cloudyBackground from "../assets/cloud.jpg";
 import drizzleBackground from "../assets/drizzle.jpg";
 import clear from "../assets/clear.jpg";
 
-const api_key = process.env.VITE_WETAPI_Key;
+
 
 export const WeatherPage = () => {
   const [weatherdata, setWeatherData] = useState(null);
@@ -22,7 +22,7 @@ export const WeatherPage = () => {
     const fetchWeatherData = async () => {
       try {
         const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${api_key}`
+          `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${"44946e87486a25ad9902e3d0513505d8"}`
         );
         setWeatherData(response.data);
       } catch (error) {
