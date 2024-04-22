@@ -1,21 +1,26 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import WeatherSkeleton from "../skeleton/skeleton";
-import { WiDaySunny, WiRain, WiCloudy, WiShowers } from 'react-icons/wi';
 
-import sunnyBackground from "../assets/sunny.jpg";
-import rainyBackground from "../assets/rain.jpg";
+import clear from "../assets/clear.jpg";
 import cloudyBackground from "../assets/cloud.jpg";
 import drizzleBackground from "../assets/drizzle.jpg";
-import clear from "../assets/clear.jpg";
+import rainyBackground from "../assets/rain.jpg";
+import sunnyBackground from "../assets/sunny.jpg";
+
+// Import SVG icons for different weather conditions
+import clearIcon from "../assets/svgsvg/day.svg";
+import rainIcon from "../assets/svgsvg/rainy.svg";
+import cloudsIcon from "../assets/svgsvg/cloudy.svg";
+import drizzleIcon from "../assets/svgsvg/drizzle.svg";
 
 const api_key = import.meta.env.VITE_WETAPI_Key;
 
 export const WeatherPage = () => {
   const [weatherdata, setWeatherData] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true); // State to track loading status
+  const [loading, setLoading] = useState(true);
   const { cityName } = useParams();
 
   useEffect(() => {
@@ -28,7 +33,7 @@ export const WeatherPage = () => {
       } catch (error) {
         setError("Failed to fetch weather data. Please try again.");
       } finally {
-        setLoading(false); // Set loading to false when the request is completed
+        setLoading(false);
       }
     };
     fetchWeatherData();
@@ -46,42 +51,58 @@ export const WeatherPage = () => {
         case 'Drizzle':
           return drizzleBackground;
         default:
-          return clear; // Default background
+          return clear;
       }
     } else {
-      return clear; // Default background if weather data is not available
+      return clear;
+    }
+  };
+
+  const selectIcon = () => {
+    if (weatherdata && weatherdata.weather && weatherdata.weather.length > 0) {
+      switch (weatherdata.weather[0].main) {
+        case 'Clear':
+          return clearIcon;
+        case 'Rain':
+          return rainIcon;
+        case 'Clouds':
+          return cloudsIcon;
+        case 'Drizzle':
+          return drizzleIcon;
+        default:
+          return clearIcon;
+      }
+    } else {
+      return clearIcon;
     }
   };
 
   return (
     <div>
-      <div className="min-h-screen flex items-center justify-center " style={{ backgroundImage: `url(${selectBackground()})` }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundImage: `url(${selectBackground()})` }}>
         {loading && <WeatherSkeleton />}
         {weatherdata && !error && !loading && (
-          <div className="flex flex-col bg-white rounded p-4 w-full max-w-xs shadow-2xl border-2 hover:bg-sky-100">
+          <div className="flex flex-col bg-white rounded p-4 w-full max-w-xs shadow-2xl border-2 hover:bg-slate-100">
             <div className="font-bold text-xl">{cityName}</div>
             <div className="text-sm text-gray-500">{new Date().toDateString()}</div>
-            <div className="mt-6 text-6xl self-center inline-flex items-center justify-center rounded-lg text-indigo-400 h-24 w-24">
-              <div className="mt-6 text-6xl  w-full self-center inline-flex items-center justify-center rounded-lg text-indigo-400 h-24 w-24">
-                {weatherdata.weather[0].main === 'Clear' && <WiDaySunny />}  
-                {weatherdata.weather[0].main === 'Rain' && <WiRain />}
-                {weatherdata.weather[0].main === 'Clouds' && <WiCloudy />}
-                {weatherdata.weather[0].main === 'Drizzle' && <WiShowers />}
-              </div>
+            <div className="mt-6 text-6xl self-center inline-flex items-center justify-center rounded-lg text-indigo-400 h-full w-full">
+              
+             <img src={selectIcon()} alt="Weather Icon"  className="w-24 h-24"/>
+              
             </div>
             <div className="flex flex-row items-center justify-center mt-6">
               {weatherdata && !error && (
                 <>
                   <div className="font-medium text-6xl">{(weatherdata.main.temp - 273.15).toFixed(1)}°c</div>
-                  <div className="flex flex-col items-center ml-6">
+                  <div className="flex flex-col items-center ml-6 font-bold">
                     <div>{weatherdata.weather[0].main}</div>
                     <div className="mt-1">
                       <span className="text-sm"><i className="far fa-long-arrow-up" /></span>
-                      <span className="text-sm font-light text-gray-500">Max - {(weatherdata.main.temp_max - 273.15).toFixed(1)}°c </span>
+                      <span className="text-sm font-light text-gray-700">Max - ({(weatherdata.main.temp_max - 273.15).toFixed(1)}°c) </span>
                     </div>
                     <div>
                       <span className="text-sm"><i className="far fa-long-arrow-down" /></span>
-                      <span className="text-sm font-light text-gray-500">Min - {(weatherdata.main.temp_min - 273.15).toFixed(1)}°c  </span>
+                      <span className="text-sm font-light text-gray-700">Min - ( {(weatherdata.main.temp_min - 273.15).toFixed(1)}°c)  </span>
                     </div>
                   </div>
                 </>

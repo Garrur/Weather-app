@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
+
 export const CitiesTable = () => {
   const [cities, setCities] = useState([]);
   const [search, setSearch] = useState('');
@@ -53,6 +54,12 @@ export const CitiesTable = () => {
       <div className="container mx-auto">
         <h2 className="underline font-bold text-4xl text-center mb-6">City Table</h2>
       </div>
+      {error && ( // Display error msg if error state is not null
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+          <strong className="font-bold">Error:</strong>
+          <span className="block sm:inline"> {error}</span>
+        </div>
+      )}
       <div className="pb-2">
         <label className="relative block">
           <span className="sr-only">Search</span>
