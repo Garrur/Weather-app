@@ -110,7 +110,7 @@ export const CitiesTable = () => {
               dataLength={cities.length}
               next = {getCityData}
               hasMore={hasMore}
-              loader = {<h4 className="text-center font bold">Loading...</h4>}
+              loader = {<h4 className="text-center font-bold">Loading...</h4>}
               endMessage={<p style={{textAlign:"center"}}><b>No More City</b></p>}
               >
                 <table className="min-w-full divide-y divide-gray-200">
