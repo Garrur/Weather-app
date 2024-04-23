@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export const CitiesTable = () => {
   const [cities, setCities] = useState([]);
@@ -9,18 +9,29 @@ export const CitiesTable = () => {
   const [cityData, setCityData] = useState([]);
   const [error, setError] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
-    
+  const [hasMore, setHasMore] = useState(true)
+  const [current, setCurrent] = useState(1)
   useEffect(() => {
-    const getCityData = async () => {
-      try {
-        const response = await axios.get("https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records?limit=100&page=${page}");
-        setCities(response.data.results);
-      } catch (error) {
-        setError("Failed to fetch city data. Please try again.");
-      }
-    };
+    
     getCityData();
   }, []);
+
+  const getCityData = async () => {
+    try {
+      const response = await axios.get(`https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records?limit=10&offset=${(current - 1) * 20}`);
+        const newCity = response.data.results
+
+      setCities(prevCity => [...prevCity, ...newCity]);
+      if(newCity.length === 0){
+        setHasMore(false)
+      }
+      
+      //check for more data to load
+      setCurrent(prevPage => prevPage+1)
+    } catch (error) {
+      setError("Failed to fetch city data. Please try again.");
+    }
+  };
 
   useEffect(() => {
     const filteredCities = cities.filter((city) =>
@@ -83,6 +94,13 @@ export const CitiesTable = () => {
           <div className="-m-1.5 overflow-x-auto">
             <div className="p-1.5 min-w-full inline-block align-middle">
               <div className="overflow-hidden">
+              <InfiniteScroll
+              dataLength={cities.length}
+              next = {getCityData}
+              hasMore={hasMore}
+              loader = {<h4>Loading..</h4>}
+              endMessage={<p style={{textAlign:"center"}}><b>No More City</b></p>}
+              >
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead>
                     <tr>
@@ -127,6 +145,7 @@ export const CitiesTable = () => {
                     ))}
                   </tbody>
                 </table>
+                </InfiniteScroll>  
               </div>
             </div>
           </div>
