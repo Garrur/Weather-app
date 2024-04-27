@@ -14,6 +14,8 @@ import clearIcon from "../assets/svgsvg/day.svg";
 import rainIcon from "../assets/svgsvg/rainy.svg";
 import cloudsIcon from "../assets/svgsvg/cloudy.svg";
 import drizzleIcon from "../assets/svgsvg/drizzle.svg";
+import ForeCast from "./ForeCast";
+
 
 const api_key = import.meta.env.VITE_WETAPI_Key;
 
@@ -79,7 +81,7 @@ export const WeatherPage = () => {
 
   return (
     <div>
-      <div className="min-h-screen flex items-center justify-center" style={{ backgroundImage: `url(${selectBackground()})` }}>
+      <div className="min-h-screen flex items-center justify-center gap-5 flex-col sm:flex-row xl:flex-col" style={{ backgroundImage: `url(${selectBackground()})` }}>
         {loading && <WeatherSkeleton />}
         {weatherdata && !error && !loading && (
           <div className="flex flex-col bg-white rounded p-4 w-full max-w-xs shadow-2xl border-2 hover:bg-slate-100">
@@ -126,9 +128,13 @@ export const WeatherPage = () => {
                 </>
               )}
             </div>
+            
           </div>
+          
         )}
         {error && !loading && <div>{error}</div>}
+        
+        <ForeCast />
       </div>
     </div>
   );
