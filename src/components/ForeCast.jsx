@@ -70,10 +70,11 @@ import axios from "axios";
 
                             return (
                                 <>
-                                    <div className=" border border-black border-y-4 bg-slate-300 shadow-lg">
+                                    <div className=" border border-slate-700 border-y-4  border-x-4 rounded-lg bg-slate-300 shadow-lg">
                                         <div key ={index} className="flex flex-col xl:gap-2 items-center text-black">
                                             <p className="font-semibold">{forecastDate}</p>
-                                            <img src={weatherIcon} alt='cloud' />
+                                            <img src={weatherIcon} alt='cloud' className='animate-pulse' />
+                                            <p className="underline"> {day.weather[0].main}</p>
                                             <p className="font-semibold">{(day.main.temp- 273.15).toFixed(1)}°c </p>
                                             <p></p>
                                         </div>
